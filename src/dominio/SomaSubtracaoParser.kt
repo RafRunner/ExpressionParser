@@ -2,10 +2,10 @@ package dominio
 
 import java.math.BigDecimal
 
-class SomaSubtracaoParser : Parser {
+class SomaSubtracaoParser : Parser() {
 
     override val regex: Regex
-        get() = Regex("""\(?(\d+)\)?([+-]?)\(?([+-]?\d+)\)?""")
+        get() = Regex("""(\D*-)?(\d+(\.\d+)?|\([+-]?\d+(\.\d+)?\))([+-])(\d+(\.\d+)?|\([+-]?\d+(\.\d+)?\))""")
 
     override fun parse(expressao: String): String {
         val matchResult = regex.find(expressao) ?: return ""
@@ -13,15 +13,19 @@ class SomaSubtracaoParser : Parser {
         val groups = matchResult.groups
         val resultadoParcial: String
 
-        val primeiroNumero = BigDecimal(groups[1]?.value)
-        val segundoNumero = BigDecimal(groups[3]?.value)
+        var primeiroNumero = trataNumeroDeGruoDeCaptura(groups, 2)
+        val segundoNumero = trataNumeroDeGruoDeCaptura(groups, 6)
 
-        resultadoParcial = if (groups[2]?.value == "+") {
+        if (groups[1] != null) {
+            primeiroNumero *= BigDecimal( -1)
+        }
+
+        resultadoParcial = if (groups[5]?.value == "+") {
             (primeiroNumero + segundoNumero).toString()
         } else {
             (primeiroNumero - segundoNumero).toString()
         }
 
-        return expressao.replaceFirst(matchResult.value, resultadoParcial)
+        return expressao.replaceFirst(matchResult.value, "($resultadoParcial)")
     }
 }
