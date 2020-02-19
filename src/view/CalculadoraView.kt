@@ -24,6 +24,9 @@ class CalculadoraView : JPanel() {
             } catch (e: ErroDeFormatacaoException) {
                 JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
                 return@addActionListener
+            } catch (e1: ArithmeticException) {
+                JOptionPane.showMessageDialog(this, "Erro de arritimética! Descrição: " + e1.message, "Erro de arritimética!", JOptionPane.ERROR_MESSAGE)
+                return@addActionListener
             }
 
             JOptionPane.showMessageDialog(this, resultado, "Resultado", JOptionPane.INFORMATION_MESSAGE)

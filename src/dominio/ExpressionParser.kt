@@ -6,9 +6,9 @@ import java.math.BigDecimal
 
 class ExpressionParser {
 
-    val potenciacaoParser: PotenciacaoParser = PotenciacaoParser()
-    val multiplicacaoDivisaoParser: MultiplicacaoDivisaoParser = MultiplicacaoDivisaoParser()
-    val somaSubtracaoParser: SomaSubtracaoParser = SomaSubtracaoParser()
+    private val potenciacaoParser: PotenciacaoParser = PotenciacaoParser()
+    private val multiplicacaoDivisaoParser: MultiplicacaoDivisaoParser = MultiplicacaoDivisaoParser()
+    private val somaSubtracaoParser: SomaSubtracaoParser = SomaSubtracaoParser()
 
     private val regexExpressaoAninhada = Regex("""\((([^\(\)]*)((\([+-]?\d+(\.\d+)?\))[^\(^)]*)*)\)""")
     private val regexParentesesRedundantes = Regex("""\(([+-])?\(([+-]?\d+(\.\d+)?)\){2}""")
