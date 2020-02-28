@@ -31,6 +31,7 @@ fun main() {
     assertEquals((0.0625).toBigDecimal(), expressionParser.parse("2^(-(4))"))
     assertEquals((7).toBigDecimal(), expressionParser.parse("(-(-(+((7)))))"))
     assertEquals((2).toBigDecimal(), expressionParser.parse("(((2)))"))
+    assertEquals((4.0).toBigDecimal(), expressionParser.parse("2^(-4/2*(-1))"))
 
     JanelaPrincipal(CalculadoraView())
 }

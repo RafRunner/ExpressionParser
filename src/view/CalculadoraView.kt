@@ -2,34 +2,43 @@ package view
 
 import dominio.ExpressionParser
 import exceptions.ErroDeFormatacaoException
+import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.math.BigDecimal
 import javax.swing.*
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
+
+
 
 class CalculadoraView : JPanel() {
 
     private val btnCalcular = JButton("Calcular valor")
     private val expressionParser = ExpressionParser()
+    private val textExpressao = JTextField()
 
     init {
         isVisible = true
 
         val labelExplicacao = JLabel("<html>Entre com uma expressão matemática abaixo (podendo conter soma, subtração, multiplicação, divisão, potenciação e parênteses) e clique em calcular</html>")
-        val textExpressao = JTextField()
+        labelExplicacao.font = Font(labelExplicacao.font.name, Font.PLAIN, 15)
 
-        btnCalcular.addActionListener {
-            val resultado: BigDecimal = try {
-                expressionParser.parse(textExpressao.text)
-            } catch (e: ErroDeFormatacaoException) {
-                JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
-                return@addActionListener
-            } catch (e1: ArithmeticException) {
-                JOptionPane.showMessageDialog(this, "Erro de arritimética! Descrição: " + e1.message, "Erro de arritimética!", JOptionPane.ERROR_MESSAGE)
-                return@addActionListener
+        textExpressao.font = Font(labelExplicacao.font.name, Font.PLAIN, 15)
+        textExpressao.addKeyListener(object : KeyListener {
+            override fun keyTyped(e: KeyEvent) {}
+
+            override fun keyPressed(e: KeyEvent) {
+                if (e.keyCode == 10) {
+                    calculaExpressaoMostraResultadoOuErro()
+                }
             }
 
-            JOptionPane.showMessageDialog(this, resultado, "Resultado", JOptionPane.INFORMATION_MESSAGE)
+            override fun keyReleased(e: KeyEvent) {}
+        })
+
+        btnCalcular.addActionListener {
+            calculaExpressaoMostraResultadoOuErro()
         }
 
         border = BorderFactory.createTitledBorder("Calculadora")
@@ -59,5 +68,19 @@ class CalculadoraView : JPanel() {
 
         gb.gridy = 4
         add(JLabel(), gb)
+    }
+
+    private fun calculaExpressaoMostraResultadoOuErro() {
+        val resultado: BigDecimal = try {
+            expressionParser.parse(textExpressao.text)
+        } catch (e: ErroDeFormatacaoException) {
+            JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
+            return
+        } catch (e1: ArithmeticException) {
+            JOptionPane.showMessageDialog(this, "Erro de arritimética! Descrição: " + e1.message, "Erro de arritimética!", JOptionPane.ERROR_MESSAGE)
+            return
+        }
+
+        JOptionPane.showMessageDialog(this, resultado, "Resultado", JOptionPane.INFORMATION_MESSAGE)
     }
 }

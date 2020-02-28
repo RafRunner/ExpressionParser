@@ -6,7 +6,7 @@ import javax.swing.JPanel
 
 class JanelaPrincipal(private val painel: JPanel) {
 
-    private val largura = 400
+    private val largura = 600
     private val altura = 400
 
     private val janela: JFrame = JFrame("Calculadora/Parser de expressões")

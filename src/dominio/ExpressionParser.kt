@@ -12,11 +12,26 @@ class ExpressionParser {
 
     private val regexExpressaoAninhada = Regex("""\((([^\(\)]*)((\([+-]?\d+(\.\d+)?\))[^\(^)]*)*)\)""")
     private val regexParentesesRedundantes = Regex("""\(([+-])?\(([+-]?\d+(\.\d+)?)\){2}""")
+    private val regexNumeroEmParenteses = Regex("""([+-])?\(([+-]?\d+(\.\d+)?)\)""")
 
     private fun tentaExtrairNumeroPuro(expressao: String): BigDecimal? {
         return try {
-            BigDecimal(expressao.replace(Regex("[()]"), ""))
+            BigDecimal(expressao)
         } catch (e: NumberFormatException) {
+            val matchNumeroEmParenteses: MatchResult? = regexNumeroEmParenteses.matchEntire(expressao)
+
+            if (matchNumeroEmParenteses != null) {
+                val group1 = matchNumeroEmParenteses.groups[1]
+                val group2 = matchNumeroEmParenteses.groups[2]
+
+                if (group2 != null) {
+                    return if (group1?.value == "-") {
+                        -BigDecimal(group2.value)
+                    } else {
+                        BigDecimal(group2.value)
+                    }
+                }
+            }
             null
         }
     }
@@ -80,10 +95,10 @@ class ExpressionParser {
 
         val resultadoParcialSomaSubtracao: String = somaSubtracaoParser.parse(expressaoSimplificada)
 
-        if (resultadoParcialSomaSubtracao == "") {
-            throw ErroDeFormatacaoException(expressaoSimplificada)
+        if (resultadoParcialSomaSubtracao != "") {
+            return parse(resultadoParcialSomaSubtracao)
         }
 
-        return parse(resultadoParcialSomaSubtracao)
+        throw ErroDeFormatacaoException(expressaoSimplificada)
     }
 }
