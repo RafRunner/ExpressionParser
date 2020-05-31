@@ -17,7 +17,7 @@ class SomaSubtracaoParser : Parser() {
         val segundoNumero = trataNumeroDeGruoDeCaptura(groups, 6)
 
         if (groups[1] != null) {
-            primeiroNumero *= BigDecimal( -1)
+            primeiroNumero *= -1
         }
 
         resultadoParcial = if (groups[5]?.value == "+") {

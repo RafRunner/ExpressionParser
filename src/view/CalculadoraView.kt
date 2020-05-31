@@ -5,11 +5,10 @@ import exceptions.ErroDeFormatacaoException
 import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
-import java.math.BigDecimal
 import javax.swing.*
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
-
+import java.text.DecimalFormat
 
 
 class CalculadoraView : JPanel() {
@@ -71,7 +70,7 @@ class CalculadoraView : JPanel() {
     }
 
     private fun calculaExpressaoMostraResultadoOuErro() {
-        val resultado: BigDecimal = try {
+        val resultado: Double = try {
             expressionParser.parse(textExpressao.text)
         } catch (e: ErroDeFormatacaoException) {
             JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
@@ -81,6 +80,8 @@ class CalculadoraView : JPanel() {
             return
         }
 
-        JOptionPane.showMessageDialog(this, resultado, "Resultado", JOptionPane.INFORMATION_MESSAGE)
+        val resultadoFormatado: String = DecimalFormat("0.###############").format(resultado)
+
+        JOptionPane.showMessageDialog(this, resultadoFormatado, "Resultado", JOptionPane.INFORMATION_MESSAGE)
     }
 }

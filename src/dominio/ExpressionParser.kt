@@ -14,9 +14,9 @@ class ExpressionParser {
     private val regexParentesesRedundantes = Regex("""\(([+-])?\(([+-]?\d+(\.\d+)?)\){2}""")
     private val regexNumeroEmParenteses = Regex("""([+-])?\(([+-]?\d+(\.\d+)?)\)""")
 
-    private fun tentaExtrairNumeroPuro(expressao: String): BigDecimal? {
+    private fun tentaExtrairNumeroPuro(expressao: String): Double? {
         return try {
-            BigDecimal(expressao)
+            expressao.toDouble()
         } catch (e: NumberFormatException) {
             val matchNumeroEmParenteses: MatchResult? = regexNumeroEmParenteses.matchEntire(expressao)
 
@@ -26,9 +26,9 @@ class ExpressionParser {
 
                 if (group2 != null) {
                     return if (group1?.value == "-") {
-                        -BigDecimal(group2.value)
+                        -(group2.value).toDouble()
                     } else {
-                        BigDecimal(group2.value)
+                        (group2.value).toDouble()
                     }
                 }
             }
@@ -66,10 +66,10 @@ class ExpressionParser {
         return expressao
     }
 
-    fun parse(expressao: String): BigDecimal {
+    fun parse(expressao: String): Double {
         val expressaoSimplificada: String = removeParentesesRedundantes(expressao)
 
-        val valorExpressao: BigDecimal? = tentaExtrairNumeroPuro(expressaoSimplificada)
+        val valorExpressao: Double? = tentaExtrairNumeroPuro(expressaoSimplificada)
         if (valorExpressao != null) {
             return valorExpressao
         }

@@ -1,7 +1,6 @@
 package dominio
 
 import java.lang.RuntimeException
-import java.math.BigDecimal
 
 abstract class Parser {
 
@@ -9,8 +8,8 @@ abstract class Parser {
 
     abstract fun parse(expressao: String): String
 
-    protected fun trataNumeroDeGruoDeCaptura(groups: MatchGroupCollection, index: Int): BigDecimal {
+    protected fun trataNumeroDeGruoDeCaptura(groups: MatchGroupCollection, index: Int): Double {
         val representacaoBruta: String = groups[index]?.value ?: throw RuntimeException("Não foi possível capturar o número. Grupos: $groups")
-        return BigDecimal(representacaoBruta.replace(Regex("[()]"), ""))
+        return (representacaoBruta.replace(Regex("[()]"), "")).toDouble()
     }
 }
