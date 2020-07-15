@@ -1,7 +1,7 @@
 package view
 
 import dominio.ExpressionParser
-import exceptions.ErroDeFormatacaoException
+import exceptions.ErroDeSintaxeException
 import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -71,7 +71,7 @@ class CalculadoraView : JPanel() {
     private fun calculaExpressaoMostraResultadoOuErro() {
         val resultado: String = try {
             expressionParser.formatAndParse(textExpressao.text)
-        } catch (e: ErroDeFormatacaoException) {
+        } catch (e: ErroDeSintaxeException) {
             JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
             return
         } catch (e1: ArithmeticException) {

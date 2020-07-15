@@ -1,6 +1,6 @@
 package dominio
 
-import exceptions.ErroDeFormatacaoException
+import exceptions.ErroDeSintaxeException
 import java.lang.NumberFormatException
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -106,6 +106,6 @@ class ExpressionParser {
             return parse(resultadoParcialSomaSubtracao)
         }
 
-        throw ErroDeFormatacaoException(expressaoSimplificada)
+        throw ErroDeSintaxeException(expressaoSimplificada)
     }
 }
