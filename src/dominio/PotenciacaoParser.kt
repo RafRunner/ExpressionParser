@@ -15,7 +15,7 @@ class PotenciacaoParser : Parser() {
         val segundoNumero: Double = trataNumeroDeGruoDeCaptura(groups, 4)
 
         val resultadoParcial: String = if (groups[1]?.value == "(-") {
-            (-1 * primeiroNumero.pow(segundoNumero)).toString()
+            (-primeiroNumero.pow(segundoNumero)).toString()
         } else {
             primeiroNumero.pow(segundoNumero).toString()
         }

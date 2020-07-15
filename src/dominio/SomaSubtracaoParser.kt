@@ -1,7 +1,5 @@
 package dominio
 
-import java.math.BigDecimal
-
 class SomaSubtracaoParser : Parser() {
 
     override val regex: Regex

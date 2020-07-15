@@ -2,13 +2,15 @@ package dominio
 
 import exceptions.ErroDeFormatacaoException
 import java.lang.NumberFormatException
-import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 class ExpressionParser {
 
-    private val potenciacaoParser: PotenciacaoParser = PotenciacaoParser()
-    private val multiplicacaoDivisaoParser: MultiplicacaoDivisaoParser = MultiplicacaoDivisaoParser()
-    private val somaSubtracaoParser: SomaSubtracaoParser = SomaSubtracaoParser()
+    private val potenciacaoParser = PotenciacaoParser()
+    private val multiplicacaoDivisaoParser = MultiplicacaoDivisaoParser()
+    private val somaSubtracaoParser = SomaSubtracaoParser()
 
     private val regexExpressaoAninhada = Regex("""\((([^\(\)]*)((\([+-]?\d+(\.\d+)?\))[^\(^)]*)*)\)""")
     private val regexParentesesRedundantes = Regex("""\(([+-])?\(([+-]?\d+(\.\d+)?)\){2}""")
@@ -21,14 +23,14 @@ class ExpressionParser {
             val matchNumeroEmParenteses: MatchResult? = regexNumeroEmParenteses.matchEntire(expressao)
 
             if (matchNumeroEmParenteses != null) {
-                val group1 = matchNumeroEmParenteses.groups[1]
-                val group2 = matchNumeroEmParenteses.groups[2]
+                val sinal = matchNumeroEmParenteses.groups[1]
+                val numero = matchNumeroEmParenteses.groups[2]
 
-                if (group2 != null) {
-                    return if (group1?.value == "-") {
-                        -(group2.value).toDouble()
+                if (numero != null) {
+                    return if (sinal?.value == "-") {
+                        -numero.value.toDouble()
                     } else {
-                        (group2.value).toDouble()
+                        numero.value.toDouble()
                     }
                 }
             }
@@ -57,13 +59,18 @@ class ExpressionParser {
             val conteudoSimplificadoParenteses = if (sinalExterno == "+" || sinalExterno == "") {
                 numeroInterno
             } else {
-                (BigDecimal(numeroInterno) * (-BigDecimal.ONE)).toString()
+                (-numeroInterno.toDouble()).toString()
             }
 
             return removeParentesesRedundantes(expressao.replace(matchParenteses.value.substring(1, matchParenteses.value.length - 1), conteudoSimplificadoParenteses))
         }
 
         return expressao
+    }
+
+    fun formatAndParse(expressao: String): String {
+        val resultado = parse(expressao.replace(" ", ""))
+        return DecimalFormat("0.###############", DecimalFormatSymbols(Locale.ENGLISH)).format(resultado)
     }
 
     fun parse(expressao: String): Double {

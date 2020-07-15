@@ -8,7 +8,6 @@ import java.awt.GridBagLayout
 import javax.swing.*
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
-import java.text.DecimalFormat
 
 
 class CalculadoraView : JPanel() {
@@ -70,8 +69,8 @@ class CalculadoraView : JPanel() {
     }
 
     private fun calculaExpressaoMostraResultadoOuErro() {
-        val resultado: Double = try {
-            expressionParser.parse(textExpressao.text)
+        val resultado: String = try {
+            expressionParser.formatAndParse(textExpressao.text)
         } catch (e: ErroDeFormatacaoException) {
             JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
             return
@@ -80,8 +79,6 @@ class CalculadoraView : JPanel() {
             return
         }
 
-        val resultadoFormatado: String = DecimalFormat("0.###############").format(resultado)
-
-        JOptionPane.showMessageDialog(this, resultadoFormatado, "Resultado", JOptionPane.INFORMATION_MESSAGE)
+        JOptionPane.showMessageDialog(this, resultado, "Resultado", JOptionPane.INFORMATION_MESSAGE)
     }
 }
