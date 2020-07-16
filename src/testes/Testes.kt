@@ -5,7 +5,23 @@ import dominio.MultiplicacaoDivisaoParser
 import dominio.PotenciacaoParser
 import view.CalculadoraView
 import view.JanelaPrincipal
+import java.lang.ArithmeticException
+import java.lang.Exception
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+
+fun assertException(exception: Exception, funcao: (String) -> Double, parametro: String) {
+    var exceptionCapturada: Exception? = null
+
+    try {
+        funcao(parametro)
+    } catch (e: Exception) {
+        exceptionCapturada = e
+    } finally {
+        assertNotNull(exceptionCapturada)
+        assertEquals(exception.javaClass, exceptionCapturada.javaClass)
+    }
+}
 
 fun main() {
     val multiplicacaoDivisaoParser = MultiplicacaoDivisaoParser()
@@ -33,6 +49,12 @@ fun main() {
     assertEquals((2.0), expressionParser.parse("(((2)))"))
     assertEquals((4.0), expressionParser.parse("2^(-4/2*(-1))"))
     assertEquals((4.0/9.0), expressionParser.parse("(2.0/3.0)^2"))
+
+    assertException(ArithmeticException(), expressionParser::parse, "0/0")
+    assertException(ArithmeticException(), expressionParser::parse, "0^0")
+    assertException(ArithmeticException(), expressionParser::parse, "0^(-1)")
+    assertException(ArithmeticException(), expressionParser::parse, "0/(2-2/5*5)")
+    assertException(ArithmeticException(), expressionParser::parse, "0^(1-1)")
 
     JanelaPrincipal(CalculadoraView())
 }

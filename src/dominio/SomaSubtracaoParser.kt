@@ -7,21 +7,19 @@ class SomaSubtracaoParser : Parser() {
 
     override fun parse(expressao: String): String {
         val matchResult = regex.find(expressao) ?: return ""
-
         val groups = matchResult.groups
-        val resultadoParcial: String
 
-        var primeiroNumero = trataNumeroDeGruoDeCaptura(groups, 2)
-        val segundoNumero = trataNumeroDeGruoDeCaptura(groups, 6)
+        var primeiroNumero: Double = trataNumeroDeGruoDeCaptura(groups, 2)
+        val segundoNumero: Double = trataNumeroDeGruoDeCaptura(groups, 6)
 
         if (groups[1] != null) {
             primeiroNumero *= -1
         }
 
-        resultadoParcial = if (groups[5]?.value == "+") {
-            (primeiroNumero + segundoNumero).toString()
+        val resultadoParcial: Double = if (groups[5]?.value == "+") {
+            primeiroNumero + segundoNumero
         } else {
-            (primeiroNumero - segundoNumero).toString()
+            primeiroNumero - segundoNumero
         }
 
         return expressao.replaceFirst(matchResult.value, "($resultadoParcial)")

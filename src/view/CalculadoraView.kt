@@ -72,10 +72,10 @@ class CalculadoraView : JPanel() {
         val resultado: String = try {
             expressionParser.formatAndParse(textExpressao.text)
         } catch (e: ErroDeSintaxeException) {
-            JOptionPane.showMessageDialog(this, e.message, "Erro de formatação!", JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(this, e.message, "Erro de sintaxe!", JOptionPane.ERROR_MESSAGE)
             return
         } catch (e1: ArithmeticException) {
-            JOptionPane.showMessageDialog(this, "Erro de arritimética! Descrição: " + e1.message, "Erro de arritimética!", JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(this, "Erro de arritimética: " + e1.message, "Erro de arritimética!", JOptionPane.ERROR_MESSAGE)
             return
         }
 

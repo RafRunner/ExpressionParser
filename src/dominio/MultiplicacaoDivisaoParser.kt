@@ -1,5 +1,7 @@
 package dominio
 
+import java.lang.ArithmeticException
+
 class MultiplicacaoDivisaoParser : Parser() {
 
     override val regex: Regex
@@ -7,17 +9,22 @@ class MultiplicacaoDivisaoParser : Parser() {
 
     override fun parse(expressao: String): String {
         val matchResult = regex.find(expressao) ?: return ""
-
         val groups = matchResult.groups
-        val resultadoParcial: String
 
-        val primeiroNumero = trataNumeroDeGruoDeCaptura(groups, 1)
-        val segundoNumero = trataNumeroDeGruoDeCaptura(groups, 5)
+        val primeiroNumero: Double = trataNumeroDeGruoDeCaptura(groups, 1)
+        val segundoNumero: Double = trataNumeroDeGruoDeCaptura(groups, 5)
 
-        resultadoParcial = if (groups[4]?.value == "*") {
-            (primeiroNumero * segundoNumero).toString()
+        // Sempre vai existir se o mathResult existir, o compilador que não sabe
+        val operacao = groups[4]?.value
+
+        if (operacao == "/" && segundoNumero == 0.0) {
+            throw ArithmeticException("Divisão por 0 é uma indeterminação")
+        }
+
+        val resultadoParcial: Double = if (operacao == "*") {
+            primeiroNumero * segundoNumero
         } else {
-            (primeiroNumero / segundoNumero).toString()
+            primeiroNumero / segundoNumero
         }
 
         return expressao.replaceFirst(matchResult.value, "($resultadoParcial)")

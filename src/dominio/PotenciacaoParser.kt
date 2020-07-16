@@ -1,5 +1,6 @@
 package dominio
 
+import java.lang.ArithmeticException
 import kotlin.math.pow
 
 class PotenciacaoParser : Parser() {
@@ -14,10 +15,18 @@ class PotenciacaoParser : Parser() {
         val primeiroNumero: Double = trataNumeroDeGruoDeCaptura(groups, 1)
         val segundoNumero: Double = trataNumeroDeGruoDeCaptura(groups, 4)
 
-        val resultadoParcial: String = if (groups[1]?.value == "(-") {
-            (-primeiroNumero.pow(segundoNumero)).toString()
+        if (primeiroNumero == segundoNumero && primeiroNumero == 0.0) {
+            throw ArithmeticException("0^0 é uma indeterminação")
+        }
+
+        if (primeiroNumero == 0.0 && segundoNumero < 0.0) {
+            throw ArithmeticException("Divisão por 0 é uma indeterminação")
+        }
+
+        val resultadoParcial: Double = if (groups[1]?.value == "(-") {
+            -primeiroNumero.pow(segundoNumero)
         } else {
-            primeiroNumero.pow(segundoNumero).toString()
+            primeiroNumero.pow(segundoNumero)
         }
 
         return expressao.replaceFirst(matchResult.value, "($resultadoParcial)")

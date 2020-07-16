@@ -2,6 +2,7 @@ package main
 
 import dominio.ExpressionParser
 import exceptions.ErroDeSintaxeException
+import java.lang.ArithmeticException
 
 fun getStringResultadoParse(expressao: String): String {
     return try {
@@ -10,8 +11,8 @@ fun getStringResultadoParse(expressao: String): String {
 
         "{ \"sucesso\": true, \"mensagem\": \"$resultado\" }"
     } catch (e: ErroDeSintaxeException) {
-        "{ \"sucesso\": false, \"mensagem\": \"Erro de sintaxe!\" }"
+        "{ \"sucesso\": false, \"mensagem\": \"${e.message}\" }"
     } catch (e1: ArithmeticException) {
-        "{ \"sucesso\": false, \"mensagem\": \"Erro de arritimética! Descrição: ${e1.message} }"
+        "{ \"sucesso\": false, \"mensagem\": \"Erro de arritimética: ${e1.message}\" }"
     }
 }

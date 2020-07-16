@@ -4,7 +4,7 @@ import java.awt.Dimension
 import javax.swing.JFrame
 import javax.swing.JPanel
 
-class JanelaPrincipal(private val painel: JPanel) {
+class JanelaPrincipal(painel: JPanel) {
 
     private val largura = 600
     private val altura = 400
